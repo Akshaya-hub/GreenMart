@@ -13,10 +13,9 @@ import Navbar from './Components/Navbar/Navbar';
 
 //import MainLayout from './MainLayout'; // Import the new layout
 
-import AddProduct from './productManagment/AddProduct';
+
 import ViewProduct from './productManagment/ViewProduct';
-import AdminView from './productManagment/AdminView';
-import Dashboard from './productManagment/Dashboard';
+
 import Cart from './cart/Cart'; // Import the new layout
 import { CartProvider } from "./cart/CartContext"
 /*
@@ -72,9 +71,7 @@ function App() {
 
 
             <Route path='/product' element={<ViewProduct />} />
-            <Route path='/add-product' element={<AddProduct />} />
-            <Route path='/admin-product' element={<AdminView />} />
-            <Route path='/dashboard' element={<Dashboard />} />
+           
             <Route path='/profile' element={<Profile />} />
 
 

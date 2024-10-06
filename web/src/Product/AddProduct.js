@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import LayoutNew from "../Layout";
-
+import LayoutNew from '../Layout';
 
 const AddProduct = () => {
     const [file, setFile] = useState(null);
@@ -82,171 +81,148 @@ const AddProduct = () => {
         reader.readAsDataURL(selectedFile);
     };
 
-    const Header = () => {
-        return (
-            <div className="bg-green-800 text-white p-4 flex justify-center items-center shadow-md">
-                <div className="flex space-x-6">
-                    <Link to='/view-product' className="hover:text-green-300 transition-colors duration-300">Home</Link>
-                    <Link to='/add-product' className="hover:text-green-300 transition-colors duration-300">Add Product</Link>
-                    <Link to='/admin-product' className="hover:text-green-300 transition-colors duration-300">Manage Product</Link>
-                    <Link to='/dashboard' className="hover:text-green-300 transition-colors duration-300">Dashboard</Link>
-                </div>
-            </div>
-        );
+    // Prevent typing numbers or special characters in the product name
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        // Allow only letters and spaces
+        if (/^[a-zA-Z\s]*$/.test(value) || value === '') {
+            setName(value);
+        }
+    };
+
+    // Prevent typing letters or special characters in the price field
+    const handlePriceChange = (e) => {
+        const value = e.target.value;
+        // Allow only numbers and a decimal point
+        if (/^\d*\.?\d*$/.test(value) || value === '') {
+            setPrice(value);
+        }
+    };
+
+    // Prevent typing decimal points in the quantity field
+    const handleQuantityChange = (e) => {
+        const value = e.target.value;
+        // Allow only whole numbers
+        if (/^\d*$/.test(value) || value === '') {
+            setQuantity(value);
+        }
     };
 
     return (
-
         <LayoutNew>
-                    <div>
-                    
-        <div className="bg-green-50 min-h-screen">
-            <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg border border-green-200">
-                <h2 className="text-3xl font-bold mb-6 text-center text-green-800">Add New Product</h2>
+            <div className="bg-green-50 min-h-screen">
+                <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg border border-green-200">
+                    <h2 className="text-3xl font-bold mb-6 text-center text-green-800">Add New Product</h2>
 
-                <div className="space-y-8">
-                    {/* General Information */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-semibold mb-4 text-green-700">General Information</h3>
-                        <input 
-                            type="text" 
-                            placeholder="Product Name" 
-                            value={name} 
-                            onChange={e => setName(e.target.value)} 
-                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        {errors.name && <p className="text-red-600">{errors.name}</p>}
-
-                        <textarea
-                            placeholder="Product Description"
-                            value={description}
-                            onChange={e => setDescription(e.target.value)}
-                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        ></textarea>
-                        {errors.description && <p className="text-red-600">{errors.description}</p>}
-
-                        <select
-                            value={category}
-                            onChange={e => setCategory(e.target.value)}
-                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        >
-                            <option value="Dry Products">Dry Products</option>
-                            <option value="Seafood">Seafood</option>
-                            <option value="Handmade Eatable">Handmade Eatable</option>
-                            <option value="Beverages">Beverages</option>
-                            <option value="Dairy Products">Dairy Products</option>
-                            <option value="Snacks">Snacks</option>
-                        </select>
-                    </div>
-
-                    {/* Pricing and Stock */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-semibold mb-4 text-green-700">Pricing and Stock</h3>
-                        <input 
-                            type="text" 
-                            placeholder="Base Price" 
-                            value={price} 
-                            onChange={e => setPrice(e.target.value)} 
-                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        {errors.price && <p className="text-red-600">{errors.price}</p>}
-
-                        <input 
-                            type="number" 
-                            placeholder="Stock" 
-                            value={quantity} 
-                            onChange={e => setQuantity(e.target.value)} 
-                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        {errors.quantity && <p className="text-red-600">{errors.quantity}</p>}
-                    </div>
-
-                    {/* Date Inputs */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-semibold mb-4 text-green-700">Manufacture and Expiration Dates</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <h4 className="text-lg font-semibold text-green-600">Manufacture Date</h4>
-                                <input
-                                    type="date"
-                                    value={manufactureDate}
-                                    onChange={e => setManufactureDate(e.target.value)}
-                                    className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                />
-                                {errors.manufactureDate && <p className="text-red-600">{errors.manufactureDate}</p>}
-                            </div>
-
-                            <div>
-                                <h4 className="text-lg font-semibold text-green-600">Expiration Date</h4>
-                                <input
-                                    type="date"
-                                    value={expDate}
-                                    onChange={e => setExpDate(e.target.value)}
-                                    className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                />
-                                {errors.expDate && <p className="text-red-600">{errors.expDate}</p>}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Image Upload and Discount */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-semibold mb-4 text-green-700">Product Image
-                        </h3>
-                        <label
-                            htmlFor="file-upload"
-                            className="inline-block bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer"
-                        >
-                            Choose File
-                        </label>
-                        <input 
-                            id="file-upload"
-                            type="file" 
-                            onChange={handleFileChange} 
-                            className="hidden"
-                        />
-                        <div className="mt-4">
-                            <div className="w-full h-64 bg-gray-100 border border-green-300 rounded-lg flex items-center justify-center">
-                                {imagePreview ? (
-                                    <img
-                                        src={imagePreview}
-                                        alt="Uploaded Preview"
-                                        className="max-h-full max-w-full object-contain rounded-lg"
-                                    />
-                                ) : (
-                                    <span className="text-gray-500">Add Image</span>
-                                )}
-                            </div>
-                            {errors.file && <p className="text-red-600">{errors.file}</p>}
-                        </div>
-
-                        <div>
-                            <h4 className="text-lg font-semibold mb-2 text-green-600">Discount Percentage</h4>
-                            <input
-                                type="text"
-                                placeholder="Enter discount percentage"
-                                value={discount}
-                                onChange={e => setDiscount(e.target.value)}
+                    <div className="space-y-8">
+                        {/* General Information */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold mb-4 text-green-700">General Information</h3>
+                            <input 
+                                type="text" 
+                                placeholder="Product Name" 
+                                value={name} 
+                                onChange={handleNameChange} 
                                 className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
-                            {errors.discount && <p className="text-red-600">{errors.discount}</p>}
+                            {errors.name && <p className="text-red-600">{errors.name}</p>}
+
+                            <textarea
+                                placeholder="Product Description"
+                                value={description}
+                                onChange={e => setDescription(e.target.value)}
+                                className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            ></textarea>
+                            {errors.description && <p className="text-red-600">{errors.description}</p>}
+
+                            <select
+                                value={category}
+                                onChange={e => setCategory(e.target.value)}
+                                className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            >
+                                <option value="Dry Products">Dry Products</option>
+                                <option value="Seafood">Seafood</option>
+                                <option value="Handmade Eatable">Handmade Eatable</option>
+                                <option value="Beverages">Beverages</option>
+                                <option value="Dairy Products">Dairy Products</option>
+                                <option value="Snacks">Snacks</option>
+                            </select>
                         </div>
+
+                        {/* Pricing and Stock */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold mb-4 text-green-700">Pricing and Stock</h3>
+                            <input 
+                                type="text" 
+                                placeholder="Base Price" 
+                                value={price} 
+                                onChange={handlePriceChange} 
+                                className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                            {errors.price && <p className="text-red-600">{errors.price}</p>}
+
+                            <input 
+                                type="text" 
+                                placeholder="Stock" 
+                                value={quantity} 
+                                onChange={handleQuantityChange} // Use the new handler here
+                                className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                            {errors.quantity && <p className="text-red-600">{errors.quantity}</p>}
+                        </div>
+
+                        {/* Date Inputs */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold mb-4 text-green-700">Manufacture and Expiration Dates</h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="text-lg font-semibold text-green-600">Manufacture Date</h4>
+                                    <input
+                                        type="date"
+                                        value={manufactureDate}
+                                        onChange={e => setManufactureDate(e.target.value)}
+                                        className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    {errors.manufactureDate && <p className="text-red-600">{errors.manufactureDate}</p>}
+                                </div>
+
+                                <div>
+                                    <h4 className="text-lg font-semibold text-green-600">Expiration Date</h4>
+                                    <input
+                                        type="date"
+                                        value={expDate}
+                                        onChange={e => setExpDate(e.target.value)}
+                                        className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    />
+                                    {errors.expDate && <p className="text-red-600">{errors.expDate}</p>}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Image Upload */}
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-semibold mb-4 text-green-700">Upload Image</h3>
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                accept="image/*"
+                                className="border border-green-300 p-2 rounded-lg"
+                            />
+                            {errors.file && <p className="text-red-600">{errors.file}</p>}
+                            {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 w-32 h-32 object-cover" />}
+                        </div>
+
+                        {/* Submit Button */}
+                        <button
+                            onClick={handleUpload}
+                            className="mt-6 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors duration-300"
+                        >
+                            Add Product
+                        </button>
                     </div>
                 </div>
-
-                <div className="text-center mt-8">
-                    <button
-                        className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        onClick={handleUpload}
-                    >
-                        Upload Product
-                    </button>
-                </div>
             </div>
-        </div>
-        </div>
         </LayoutNew>
-
     );
 };
 
