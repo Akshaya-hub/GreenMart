@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card as AntCard, Row, Col, Button as AntButton, Input, message, Checkbox, Modal, Form, Space } from 'antd';
+import { Card as AntCard, Row, Col, Button as AntButton, Input, message, Checkbox, Modal, Form, Space, Table } from 'antd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -17,7 +17,6 @@ import { Typography } from 'antd';
 import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
-const { Meta } = AntCard;
 
 function ItemDetails() {
   const [showDiscounts, setShowDiscounts] = useState([]);
@@ -28,11 +27,23 @@ function ItemDetails() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
-  const { subtotal, discount, total, items } = location.state || {};
+  
+  // Destructure values and provide default values if undefined
+  const { subtotal = 0, discount = 0, total = 0, items } = location.state || {};
+  
   const [isNewModalVisible, setIsNewModalVisible] = useState(false);
   const [selectedItemDetails, setSelectedItemDetails] = useState(null);
+ 
+  useEffect(() => {
+    if (items) {
+      console.log('Subtotal:', subtotal);
+      console.log('Discount:', discount);
+      console.log('Total:', total);
+      console.log('Items:', items);
+    }
+  }, [subtotal, discount, total, items]);
 
-
+  
   const getFetchData = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/items/item');
@@ -93,6 +104,47 @@ function ItemDetails() {
     setIsNewModalVisible(true);
   };
 
+  const columns = [
+    {
+      title: 'Item Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (text) => `Rs ${text}`,
+    },
+    {
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
+      render: (text) => `Rs ${text}`,
+    },
+    {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (text) => (
+        <img
+          src={`http://localhost:3000/Images/${text}`}
+          alt="Item"
+          style={{
+            width: '60px',
+            height: '60px',
+            objectFit: 'contain',
+          }}
+        />
+      ),
+    },
+  ];
+
   return (
     <div>
       <Space
@@ -107,7 +159,7 @@ function ItemDetails() {
         }}
       >
         <Space>
-          <StockOutlined style={{ fontSize: '24px', marginRight: '8px',marginTop:'15px'}} />
+          <StockOutlined style={{ fontSize: '24px', marginRight: '8px', marginTop: '15px' }} />
           <Title level={2} style={{ fontSize: '24px', marginTop: '8px', color: 'white' }}>
             Delivery Details
           </Title>
@@ -126,53 +178,45 @@ function ItemDetails() {
           style={{ color: 'white' }}
           onClick={handleNewModalOpen}
         >
-          <EditOutlined /> Select the Delivery Addresss
+          <EditOutlined /> Select the Delivery Address
         </AntButton>
       </div>
 
       <Container>
         <ContentContainer>
-          <CardsContainer>
-          
-          {items && items.map(item => (
-    <StyledCard key={item.name}>
-        <ItemTitle>{item.name}</ItemTitle>
-        <div style={{marginLeft:'500px'}}>
-            <p>Qty: {item.quantity}</p>
-            <p>Price: Rs {item.price}</p>
-            <p>Total: Rs {item.total}</p>
-        </div>
-    </StyledCard>
-))}
-
-          </CardsContainer>
+          <Table
+            dataSource={items}
+            columns={columns}
+            pagination={false}
+            rowKey="_id" // Adjust to your unique identifier
+            style={{ flexGrow: 1 }}
+          />
 
           <RightBox>
-      <h3 style={{ textAlign: 'center' }}>Order Summary</h3>
-      {selectedItemDetails && (
-        <div style={{marginLeft:'30px' }}>
-          <p><strong>Selected Address:</strong> {selectedItemDetails.emaill}</p>
-          <p>Name: {selectedItemDetails.fnamee} {selectedItemDetails.lnamee}</p>
-          <p>Address: {selectedItemDetails.address}</p>
-          <p>Phone: {selectedItemDetails.p_nbb}</p>
-          <p>Zip Code: {selectedItemDetails.zipcode}</p>
-        </div>
-      )}
+            <h3 style={{ textAlign: 'center' }}>Order Summary</h3>
+            {selectedItemDetails && (
+              <div style={{ marginLeft: '30px' }}>
+                <p><strong>Selected Address:</strong> {selectedItemDetails.emaill}</p>
+                <p>Name: {selectedItemDetails.fnamee} {selectedItemDetails.lnamee}</p>
+                <p>Address: {selectedItemDetails.address}</p>
+                <p>Phone: {selectedItemDetails.p_nbb}</p>
+                <p>Zip Code: {selectedItemDetails.zipcode}</p>
+              </div>
+            )}
 
-      <SummaryCard>
-        <p style={{ textAlign: 'right' }}>Subtotal: ${subtotal}</p>
-        <p style={{ textAlign: 'right' }}>Discount: ${discount?.toFixed(2)}</p>
-        <div style={{ color: '#06D001', fontWeight: 'bold', textAlign: 'right' }}>
-          <p>Total: ${total?.toFixed(2)}</p>
-        </div>
-        <SummaryFooter>
-          <AntButton type="primary" style={{ width: '100%' }}  onClick={() => navigate('/package')} >
-            Proceed
-          </AntButton>
-        </SummaryFooter>
-      </SummaryCard>
-    </RightBox>
-
+            <SummaryCard>
+              <p style={{ textAlign: 'right' }}>Subtotal: Rs {subtotal}</p>
+              <p style={{ textAlign: 'right' }}>Discount: Rs {discount}</p>
+              <div style={{ color: '#06D001', fontWeight: 'bold', textAlign: 'right' }}>
+                <p>Total: Rs {total}</p>
+              </div>
+              <SummaryFooter>
+                <AntButton type="primary" style={{ width: '100%' }} onClick={() => navigate('/package')}>
+                  Proceed
+                </AntButton>
+              </SummaryFooter>
+            </SummaryCard>
+          </RightBox>
         </ContentContainer>
 
         {/* Modal for Editing Item */}
@@ -210,7 +254,6 @@ function ItemDetails() {
           onCancel={() => setIsNewModalVisible(false)}
           footer={null}
         >
-          
           <AddressList
             items={showDiscounts}
             onEdit={handleEdit}
@@ -232,125 +275,61 @@ function ItemDetails() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
-          <AntButton onClick={() => setIsNewModalVisible(false)}>Close</AntButton>
+            <AntButton onClick={() => setIsNewModalVisible(false)}>Close</AntButton>
 
-          <AntButton 
-  type="primary" 
-  onClick={() => {
-    const selectedItem = showDiscounts.find(item => item._id === selectedCardId);
-    if (selectedItem) {
-      setSelectedItemDetails(selectedItem);
-    }
-    setIsNewModalVisible(false);
-  }}
->
-  OK
-</AntButton>
-
-    
-    </div>
-          
+            <AntButton 
+              type="primary" 
+              onClick={() => {
+                const selectedItem = showDiscounts.find(item => item._id === selectedCardId);
+                if (selectedItem) {
+                  setSelectedItemDetails(selectedItem);
+                }
+                setIsNewModalVisible(false);
+              }}
+            >
+              Confirm Address
+            </AntButton>
+          </div>
         </Modal>
       </Container>
-      </div>
-    
+    </div>
   );
 }
 
+export default ItemDetails;
+
 const Container = styled.div`
-  padding: 10px;
-  background-color: #CADABF;
-  border-radius: 8px;
-  margin-left: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  margin-top: 20px;
 `;
 
 const ContentContainer = styled.div`
   display: flex;
-  flex-grow: 1;
-  margin-top: 20px;
-  width: 500px;
-`;
-
-const CardsContainer = styled.div`
-  width: auto;
-  overflow-y: auto;
-  flex-grow: 1;
-  max-height: 80vh;
-`;
-
-const StyledCard = styled(AntCard)`
-  background-color: #F3EEEA;
-  height: 130px;
-  width: auto;
-  margin-bottom: 16px;
-  display: flex;
-
-  .ant-card-body {
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: left;
-    margin-left: 25px;
-    height: 100%;
-  }
-`;
-
-const CardHeader = styled.div`
-  margin-top: 10px;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 100%;
 `;
-
-const ItemDescription = styled.span`
-  font-weight: normal; /* Normal weight for description */
-  color: #555; /* Slightly lighter color for description */
-  font-size: 14px; /* Adjust font size if needed */
-  margin-left:0px;
-
-  `;
-
-const ItemTitle = styled.span`
-  font-weight: bold;
-`;
-
-const CardFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-`;
-
 
 const RightBox = styled.div`
-  width: 550px;
-  height: auto;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-left: 15px;
-  margin-right: 15px;
-  position: relative; /* Allows absolute positioning of footer */
+  width: 300px; /* Adjust the width as needed */
+  margin-left: 20px; /* Adjust for spacing */
+  padding: 16px;
+  background-color: #f9f9f9;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
 `;
 
-const SummaryCard = styled(AntCard)`
-  width: 100%;
-  margin-top: 15px; /* Pushes the card to the bottom */
-  padding: 0px;
-  align-items: center;
-  height:170px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+const SummaryCard = styled.div`
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 20px;
 `;
 
 const SummaryFooter = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
 `;
-
-export default ItemDetails;

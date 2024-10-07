@@ -54,6 +54,7 @@ import ReturnForm from './return/ReturnForm'
 
 import Chatbot from './chatbox/Chatbot';
 
+import Checkout from './cart/Checkout';
 
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
             <Route path='/aboutUs' element={<PackagingMaterials />} />
             <Route path='/service' element={<PackagingMaterials />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
 
 
             <Route path='/product' element={<ViewProduct />} />

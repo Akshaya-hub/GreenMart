@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { CartContext } from './CartContext';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Cart = () => {
     const context = useContext(CartContext);
     const navigate = useNavigate(); // Initialize useNavigate hook
+    const [promoCode, setPromoCode] = useState(null); // State to store promo code
 
     if (!context) {
         console.error('CartContext is not available');
@@ -51,21 +52,34 @@ const Cart = () => {
         setCartItems(updatedCartItems);
     };
 
+    const generatePromoCode = () => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 8; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return code;
+    };
+
     const discount = 0;
     const delivery = 0;
     const subtotal = calculateTotal();
 
+    // Generate promo code if total > 10000
+    if (subtotal > 10000 && !promoCode) {
+        const newPromoCode = generatePromoCode();
+        setPromoCode(newPromoCode);
+    }
+
     const handleCheckout = async () => {
         const userId = localStorage.getItem('userId'); // Example of getting userId from localStorage
-    
     
         if (!userId) {
             alert('Please log in to proceed with checkout.');
             console.error('User ID is missing');
             return;
         }
-    
-    
+
         try {
             const response = await fetch('http://localhost:3000/api/cart/checkout', {
                 method: 'POST',
@@ -83,25 +97,29 @@ const Cart = () => {
                     subtotal: subtotal,
                     discount: discount,
                     total: subtotal - discount,
+                    promoCode: promoCode || null // Include promo code if available
                 })
             });
-    
+
             const data = await response.json();
             if (response.ok) {
                 console.log('Cart saved:', data);
-                navigate('/itemdetails', {
+                navigate('/checkout', {
                     state: {
                         items: cartItems.map(item => ({
                             name: item.name,
                             quantity: item.quantity,
                             price: item.price,
-                            total: (item.price * item.quantity).toFixed(2)
+                            total: (item.price * item.quantity).toFixed(2),
+                            image: item.image // Include image data
                         })),
                         subtotal: subtotal,
                         discount: discount,
                         total: subtotal - discount,
+                        promoCode: promoCode // If applied
                     },
                 });
+                
             } else {
                 console.error('Error saving cart:', data.message);
             }
@@ -109,7 +127,6 @@ const Cart = () => {
             console.error('Error during checkout:', error);
         }
     };
-    
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -168,6 +185,7 @@ const Cart = () => {
             <div style={{ marginTop: '20px', textAlign: 'right' }}>
                 <p>Subtotal: Rs{subtotal}</p>
                 <h3>Total: Rs{subtotal}</h3>
+                {promoCode && <p>Promo Code: <strong>{promoCode}</strong></p>}
                 <button
                     style={{ backgroundColor: '#28a745', color: '#fff', padding: '5px 10px', border: 'none', borderRadius: '5px', marginLeft: '10px' }}
                     onClick={handleCheckout} // Call handleCheckout on click
