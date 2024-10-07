@@ -1,94 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { CartContext } from '../cart/CartContext'; // Import CartContext
 import PackagingMaterials from './packagingMaterials';
 import pattern1 from '../Components/assets/pattern1.png';
 import pattern2 from '../Components/assets/pattern2.png';
 import pattern3 from '../Components/assets/pattern3.jpg';
 import pattern4 from '../Components/assets/pattern4.png';
-import arrow from '../Components/assets/1.png';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Packaging = () => {
-    const [products, setProducts] = useState([]);
-    const navigate = useNavigate(); // For navigation
-
-    // Sample data to simulate fetching from API
-    const sampleData = [
-        {
-            id: 'p1',
-            name: 'Cashew nuts',
-            weight: '500g',
-            quantity: 2,
-            image: 'http://localhost:3000/images/uploadImage_1726846083197.png',
-            packagingOption: 'Kraft Paper Box',
-            customColor: '',
-            note: '',
-            selectedPattern: '',
-            internalMeasurement: '20cm x 15cm x 10cm'
-        },
-        {
-            id: 'p2',
-            name: 'Dry Fish',
-            weight: '1kg',
-            quantity: 5,
-            image: 'http://localhost:3000/images/uploadImage_1726832819705.jpg',
-            packagingOption: 'Square Bottom Paper Bag',
-            customColor: '',
-            note: '',
-            selectedPattern: '',
-            internalMeasurement: '30cm x 20cm x 15cm'
-        },
-        {
-            id: 'p3',
-            name: 'Herbal Tea',
-            weight: '250g',
-            quantity: 1,
-            image: 'http://localhost:3000/images/uploadImage_1726846083197.png',
-            packagingOption: 'Card Board Box',
-            customColor: '',
-            note: '',
-            selectedPattern: '',
-            internalMeasurement: '10cm x 10cm x 5cm'
-        }
-    ];
-
-    const fetchInfo = async () => {
-        // Simulating an API call with sample data
-        setProducts(sampleData);
-    };
+    const { cartItems } = useContext(CartContext); // Access cart items from context
+    const [products, setProducts] = useState(cartItems); // Initialize products with cart items
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchInfo();
-    }, []);
+        setProducts(cartItems); // Update products if cartItems change
+    }, [cartItems]);
 
     const handlePackagingOptionChange = (productId, option) => {
         const updatedProducts = products.map(product =>
-            product.id === productId ? { ...product, packagingOption: option } : product
+            product._id === productId ? { ...product, packagingOption: option } : product
         );
         setProducts(updatedProducts);
     };
 
     const handleCustomColorChange = (productId, color) => {
         const updatedProducts = products.map(product =>
-            product.id === productId ? { ...product, customColor: color } : product
+            product._id === productId ? { ...product, customColor: color } : product
         );
         setProducts(updatedProducts);
     };
 
     const handlePatternChange = (productId, pattern) => {
         const updatedProducts = products.map(product =>
-            product.id === productId ? { ...product, selectedPattern: pattern } : product
+            product._id === productId ? { ...product, selectedPattern: pattern } : product
         );
         setProducts(updatedProducts);
     };
 
     const handleNoteChange = (productId, note) => {
         const updatedProducts = products.map(product =>
-            product.id === productId ? { ...product, note } : product
+            product._id === productId ? { ...product, note } : product
         );
         setProducts(updatedProducts);
     };
-    
+
     const getPatternImage = (pattern) => {
         switch (pattern) {
             case 'pattern1':
@@ -107,15 +63,15 @@ const Packaging = () => {
     const handleSubmit = async (product) => {
         const orderData = {
             pa_id: new Date().getTime().toString(),
-            o_id: new Date().getTime().toString(),  // Order ID
-            pro_id: product.id,                     // Product ID
+            o_id: new Date().getTime().toString(), // Order ID
+            pro_id: product._id, // Use _id for product ID
             quantity: product.quantity,
             material: product.packagingOption,
             internalMeasurement: product.internalMeasurement,
             customColor: product.customColor,
             customNote: product.note,
             pattern: product.selectedPattern,
-            deliverDate: new Date(),              
+            deliverDate: new Date(),
             status: 'Pending'
         };
 
@@ -128,7 +84,6 @@ const Packaging = () => {
             });
             alert('Packaging order added successfully!');
             console.log('Response:', response.data);
-
         } catch (error) {
             console.error('Error submitting order:', error);
             alert('Failed to add packaging order');
@@ -140,18 +95,17 @@ const Packaging = () => {
             <div>
                 <button 
                     className="submitpack" 
-                    style={{ marginRight: '2700px',marginLeft: '10px',width:'100px' }}
+                    style={{ marginRight: '2700px', marginLeft: '10px', width: '100px' }}
                     onClick={() => navigate('/checkout')} // Adjust the path as needed
                 >
                     back
                 </button>
-              
             </div>
 
             <div className="packaging">
                 {products.map(product => (
-                    <div key={product.id} className="productpack">
-                        <img src={product.image} alt={product.name} className="productpack-image" />
+                    <div key={product._id} className="productpack"> {/* Use _id as the key */}
+                        <img src={`http://localhost:3000/Images/${product.image}`} alt={product.name} className="productpack-image" />
                         <div className="productpack-details">
                             <h3>{product.name}</h3>
                             <p>Weight = {product.weight}</p>
@@ -160,15 +114,12 @@ const Packaging = () => {
                             {/* Display Custom Color and Pattern Overlapping */}
                             <p className='view'>CustomWrap:
                                 <span className="custom-wrap">
-                                    {/* Colored background */}
                                     <span
                                         className="color-background"
                                         style={{
                                             backgroundColor: product.customColor,
                                         }}
                                     ></span>
-
-                                    {/* Pattern overlay */}
                                     {product.selectedPattern && (
                                         <img
                                             src={getPatternImage(product.selectedPattern)}
@@ -184,7 +135,7 @@ const Packaging = () => {
                             <label>Packaging Option</label>
                             <select
                                 value={product.packagingOption}
-                                onChange={(e) => handlePackagingOptionChange(product.id, e.target.value)}
+                                onChange={(e) => handlePackagingOptionChange(product._id, e.target.value)} // Use _id
                             >
                                 <option value="Kraft Paper Box">Kraft Paper Box</option>
                                 <option value="Square Bottom Paper Bag">Square Bottom Paper Bag</option>
@@ -199,7 +150,7 @@ const Packaging = () => {
                                     type="text"
                                     placeholder="Note"
                                     value={product.note}
-                                    onChange={(e) => handleNoteChange(product.id, e.target.value)}
+                                    onChange={(e) => handleNoteChange(product._id, e.target.value)} // Use _id
                                 />
                             </div>
                         </div>
@@ -210,7 +161,7 @@ const Packaging = () => {
                                 className='colorbox'
                                 type="color"
                                 value={product.customColor}
-                                onChange={(e) => handleCustomColorChange(product.id, e.target.value)}
+                                onChange={(e) => handleCustomColorChange(product._id, e.target.value)} // Use _id
                             />
 
                             <div className="pattern-options">
@@ -218,40 +169,40 @@ const Packaging = () => {
                                 <label>
                                     <input
                                         type="radio"
-                                        name={`pattern-${product.id}`}
+                                        name={`pattern-${product._id}`}
                                         value="pattern1"
                                         checked={product.selectedPattern === 'pattern1'}
-                                        onChange={() => handlePatternChange(product.id, 'pattern1')}
+                                        onChange={() => handlePatternChange(product._id, 'pattern1')} // Use _id
                                     />
                                     <img src={pattern1} alt="Pattern 1" id="pattern-image" />
                                 </label>
                                 <label>
                                     <input
                                         type="radio"
-                                        name={`pattern-${product.id}`}
+                                        name={`pattern-${product._id}`}
                                         value="pattern2"
                                         checked={product.selectedPattern === 'pattern2'}
-                                        onChange={() => handlePatternChange(product.id, 'pattern2')}
+                                        onChange={() => handlePatternChange(product._id, 'pattern2')} // Use _id
                                     />
                                     <img src={pattern2} alt="Pattern 2" id="pattern-image" />
                                 </label>
                                 <label>
                                     <input
                                         type="radio"
-                                        name={`pattern-${product.id}`}
+                                        name={`pattern-${product._id}`}
                                         value="pattern3"
                                         checked={product.selectedPattern === 'pattern3'}
-                                        onChange={() => handlePatternChange(product.id, 'pattern3')}
+                                        onChange={() => handlePatternChange(product._id, 'pattern3')} // Use _id
                                     />
                                     <img src={pattern3} alt="Pattern 3" id="pattern-image" />
                                 </label>
                                 <label>
                                     <input
                                         type="radio"
-                                        name={`pattern-${product.id}`}
+                                        name={`pattern-${product._id}`}
                                         value="pattern4"
                                         checked={product.selectedPattern === 'pattern4'}
-                                        onChange={() => handlePatternChange(product.id, 'pattern4')}
+                                        onChange={() => handlePatternChange(product._id, 'pattern4')} // Use _id
                                     />
                                     <img src={pattern4} alt="Pattern 4" id="pattern-image" />
                                 </label>
@@ -264,14 +215,14 @@ const Packaging = () => {
             <button 
                 className="submitpack" 
                 style={{ 
-                display: 'block', 
-                margin: '20px auto 50px auto',  // Center horizontally and add bottom margin
-                width: '240px' 
-                  }}
+                    display: 'block', 
+                    margin: '20px auto 50px auto',  // Center horizontally and add bottom margin
+                    width: '240px' 
+                }}
                 onClick={() => navigate('/start')} // Adjust the path as needed
             >
                 Proceed
-             </button>
+            </button>
 
             <div>
                 <PackagingMaterials />

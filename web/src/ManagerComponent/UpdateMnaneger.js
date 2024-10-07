@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import LayoutNew from '../Layout';
 
-
 function ManagerUpdateItem() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -140,93 +139,103 @@ function ManagerUpdateItem() {
 
     return (
         <LayoutNew>
-            <div className='item-update'>
-                <h2>Update Delivery Details</h2>
+            <div className='item-update' style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Update Delivery Details</h2>
                 <form>
-                    <label>Customer Name:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Customer Name:</label>
                     <input
                         type="text"
                         id="username"
                         name="username"
                         onChange={handleInputChange}
                         value={updateorder?.username}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.username && <p className="error">{errors.username}</p>}
+                    {errors.username && <p className="error" style={{ color: 'red' }}>{errors.username}</p>}
 
-                    <label>Delivery Address:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Delivery Address:</label>
                     <input
                         type="text"
                         id="dili_address"
                         name="dili_address"
                         onChange={handleInputChange}
                         value={updateorder?.dili_address}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.dili_address && <p className="error">{errors.dili_address}</p>}
+                    {errors.dili_address && <p className="error" style={{ color: 'red' }}>{errors.dili_address}</p>}
 
-                    <label>Delivery Date:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Delivery Date:</label>
                     <input
                         type="date"
                         id="dili_date"
                         name="dili_date"
                         onChange={handleInputChange}
                         value={updateorder?.dili_date}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.dili_date && <p className="error">{errors.dili_date}</p>}
+                    {errors.dili_date && <p className="error" style={{ color: 'red' }}>{errors.dili_date}</p>}
 
-                    <label>Delivery Status:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Delivery Status:</label>
                     <select
                         id="dili_status"
                         name="dili_status"
                         onChange={handleInputChange}
                         value={updateorder?.dili_status}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     >
                         <option value="">Select Status</option>
                         <option value="Pending">Pending</option>
                         <option value="Shipped">Shipped</option>
                         <option value="Delivered">Delivered</option>
                     </select>
-                    {errors.dili_status && <p className="error">{errors.dili_status}</p>}
+                    {errors.dili_status && <p className="error" style={{ color: 'red' }}>{errors.dili_status}</p>}
 
-                    <label>Delivery Method:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Delivery Method:</label>
                     <input
                         type="text"
                         id="dili_method"
                         name="dili_method"
                         onChange={handleInputChange}
                         value={updateorder?.dili_method}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.dili_method && <p className="error">{errors.dili_method}</p>}
+                    {errors.dili_method && <p className="error" style={{ color: 'red' }}>{errors.dili_method}</p>}
 
-                    <label>Delivery Cost $:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Delivery Cost $:</label>
                     <input
                         type="text"
                         id="dili_cost"
                         name="dili_cost"
                         onChange={handleInputChange}
                         value={updateorder?.dili_cost}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.dili_cost && <p className="error">{errors.dili_cost}</p>}
+                    {errors.dili_cost && <p className="error" style={{ color: 'red' }}>{errors.dili_cost}</p>}
 
-                    <label>Assigned Personal:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Assigned Personal:</label>
                     <input
                         type="text"
                         id="assignes_personal"
                         name="assignes_personal"
                         onChange={handleInputChange}
                         value={updateorder?.assignes_personal}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.assignes_personal && <p className="error">{errors.assignes_personal}</p>}
+                    {errors.assignes_personal && <p className="error" style={{ color: 'red' }}>{errors.assignes_personal}</p>}
 
-                    <label>Notes:</label>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Notes:</label>
                     <textarea
                         id="notes"
                         name="notes"
                         onChange={handleInputChange}
                         value={updateorder?.notes}
+                        style={{ width: '100%', padding: '8px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
                     />
-                    {errors.notes && <p className="error">{errors.notes}</p>}
+                    {errors.notes && <p className="error" style={{ color: 'red' }}>{errors.notes}</p>}
 
-                    <button type="button" onClick={handleUpdate}>Update</button>
+                    <button type="button" onClick={handleUpdate} style={{ padding: '10px 15px', backgroundColor: '#007BFF', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                        Update
+                    </button>
                 </form>
             </div>
         </LayoutNew>

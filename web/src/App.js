@@ -48,9 +48,7 @@ function App() {
       <Routes>
         {/* Home and Product Routes <Route path='/' element={<Dash />} />*/}
 
-        
-
-
+    
         {/* Manager & Routes */}
         <Route path='/table' element={<Table />} />
         <Route path='/delper' element={<Deli />} />
@@ -83,6 +81,8 @@ function App() {
         <Route path="/admin-register" element={<AdminRegister />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/user-details" element={<UserTable />} /> 
+
+
 
         {/* 404 Route */}
         <Route path='*' element={<h2>404: Page Not Found</h2>} />
