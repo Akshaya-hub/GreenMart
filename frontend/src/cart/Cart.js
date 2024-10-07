@@ -58,10 +58,13 @@ const Cart = () => {
     const handleCheckout = async () => {
         const userId = localStorage.getItem('userId'); // Example of getting userId from localStorage
     
+    
         if (!userId) {
+            alert('Please log in to proceed with checkout.');
             console.error('User ID is missing');
             return;
         }
+    
     
         try {
             const response = await fetch('http://localhost:3000/api/cart/checkout', {

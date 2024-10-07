@@ -17,19 +17,24 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await login({ email, password });
+        const response = await login({ email, password });
 
-      if (response.data.success) {
-        navigate("/", { state: { user: response.data.user } });
-      }
+        if (response.data.success) {
+            // Store userId in localStorage
+            localStorage.setItem('userId', response.data.user._id);
+
+            // Navigate to the home page
+            navigate("/", { state: { user: response.data.user } });
+        }
     } catch (error) {
-      setError("Login failed. Please check your credentials.");
-      console.error(
-        "Login failed:",
-        error.response ? error.response.data : error.message
-      );
+        setError("Login failed. Please check your credentials.");
+        console.error(
+            "Login failed:",
+            error.response ? error.response.data : error.message
+        );
     }
-  };
+};
+
 
   return (
     <div className="login-page">
