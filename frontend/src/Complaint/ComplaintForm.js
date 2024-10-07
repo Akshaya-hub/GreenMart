@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import customerservice from '../Components/assets/customer-service.jpg';
 import chat from '../Components/assets/chat-with-us.png';
+import { Link } from 'react-router-dom';
 
 const ComplainForm = () => {
     const [formData, setFormData] = useState({
@@ -100,7 +101,9 @@ const ComplainForm = () => {
             <section style={{ textAlign: 'center', marginBottom: '20px' }}>
                 <h1 style={{ fontSize: '2rem' }}>Complaint Form</h1>
                 <p>We're here to help! Please fill out this form to report any issues with your order or service.</p>
-                <img src={chat} style={{ width: '150px', marginTop: '10px' }} alt='chat' />
+                <Link to='/chatbot'>
+                    <img src={chat} style={{ width: '150px', marginTop: '10px' }} alt='chat' />
+                </Link>
             </section>
             <main>
             <div style={{ marginTop: '20px', textAlign: 'center', marginLeft:'300px' }}>

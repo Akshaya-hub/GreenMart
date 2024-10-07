@@ -52,6 +52,9 @@ import Complain from './Complaint/ComplaintForm'
 //return
 import ReturnForm from './return/ReturnForm'
 
+import Chatbot from './chatbox/Chatbot';
+
+
 
 function App() {
   return (
@@ -97,6 +100,7 @@ function App() {
           <Route path="/complaint" element={<Complain />} />
           <Route path="/return" element={<ReturnForm />} />
 
+          <Route path="/chatbot" element={<Chatbot />} />
 
 
         </Routes>
