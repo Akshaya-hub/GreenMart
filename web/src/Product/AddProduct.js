@@ -63,7 +63,7 @@ const AddProduct = () => {
         axios.post('http://localhost:3000/api/products/upload', formData)
             .then(res => {
                 console.log('Upload response:', res.data);
-                navigate('/admin-product');
+                navigate('/adminproduct');
                 window.location.reload();
             })
             .catch(err => console.log(err));
@@ -210,6 +210,18 @@ const AddProduct = () => {
                             />
                             {errors.file && <p className="text-red-600">{errors.file}</p>}
                             {imagePreview && <img src={imagePreview} alt="Preview" className="mt-4 w-32 h-32 object-cover" />}
+                        </div>
+                        {/* Discount Input */}
+                        <div>
+                            <h4 className="text-lg font-semibold mb-2 text-green-600">Discount Percentage</h4>
+                        <input
+                           type="text"
+                           placeholder="Enter discount percentage"
+                            value={discount}
+                            onChange={e => setDiscount(e.target.value)}
+                            className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                            {errors.discount && <p className="text-red-600">{errors.discount}</p>}
                         </div>
 
                         {/* Submit Button */}

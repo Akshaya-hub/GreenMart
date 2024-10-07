@@ -71,18 +71,6 @@ const AdminView = () => {
     };
     
 
-    const Header = () => {
-        return (
-            <div className="bg-green-800 text-white p-4 flex justify-center items-center shadow-md">
-                <div className="flex space-x-6">
-                    <Link to='/view-product' className="hover:text-green-300 transition-colors duration-300">Home</Link>
-                    <Link to='/add-product' className="hover:text-green-300 transition-colors duration-300">Add Product</Link>
-                    <Link to='/admin-product' className="hover:text-green-300 transition-colors duration-300">Manage Product</Link>
-                    <Link to='/dashboard' className="hover:text-green-300 transition-colors duration-300">Dashboard</Link>
-                </div>
-            </div>
-        );
-    };
 
     return (
         <LayoutNew>
@@ -95,7 +83,7 @@ const AdminView = () => {
                     <h2 className="text-3xl font-bold text-green-800">Admin View</h2>
                     <div className="flex space-x-4">
                         <a 
-                            href="/add-product" 
+                            href="/addproduct" 
                             className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
                         >
                             Add Product
