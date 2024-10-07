@@ -26,16 +26,20 @@ const adminUserItems = [
     label: "Delivery",
     children: [
       {
-        key: "1",
+        key: "deliPer",
         icon: <SyncOutlined />,
         label: "Delivery Employees",
       },
       {
-        key: "11",
+        key: "deliveryList",
         icon: <StockOutlined />,
         label: "Delivery Details",
       },
-
+      {
+        key: "addDeli",
+        icon: <StockOutlined />,
+        label: "Add delivery ",
+      },
       
     ],
   },
@@ -132,12 +136,16 @@ const App = ({ children, userType }) => {
 
   const handleMenuClick = (item) => {
 
-    if (item.key === "1") {
+    if (item.key === "deliPer") {
       navigate("/delper");
     }
 
-    if (item.key === "11") {
-      navigate("/mdet");
+    if (item.key === "deliveryList") {
+      navigate("/delist");
+    }
+
+    if (item.key === "addDeli") {
+      navigate("/addMan");
     }
 
     if (item.key === "porder") {

@@ -12,6 +12,7 @@ import ManagerSignUp from './ManagerComponent/ManagerSignUp';
 import ManagerSignin from './ManagerComponent/ManagerSignin';
 import DeliveryDetails from './ManagerComponent/managerdetails';
 import ManagerUpdateItem from './ManagerComponent/UpdateMnaneger';
+import AddManager from './ManagerComponent/AddMnaneger'
 
 //pack
 import Order from './packing/Order';
@@ -57,6 +58,7 @@ function App() {
         <Route path='/manager/login' element={<ManagerSignin />} />
         <Route path='/mdet' element={<DeliveryDetails />} />
         <Route path='/mdet/:id' element={<ManagerUpdateItem />} />
+        <Route path='/addMan' element={<AddManager />} />
        
       {/* Package Routes */}
 
