@@ -20,7 +20,7 @@ const AdminLogin = () => {
             if (response.ok && data.token) {
                 localStorage.setItem('adminToken', data.token); // Store the JWT token
                 alert('Login successful!');
-                navigate('/user-details'); // Navigate to user details page upon successful login
+                navigate('/mdet'); 
             } else {
                 alert(data.message || 'Login failed');
             }

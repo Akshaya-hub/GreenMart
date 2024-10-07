@@ -262,12 +262,17 @@ const Packaging = () => {
                 ))}
             </div>
             <button 
-                    className="submitpack" 
-                    style={{ marginLeft: '1570px', marginBottom:'50px',width:'240px' }}
-                    onClick={() => navigate('/start')} // Adjust the path as needed
-                >
-                    Proceed
-                </button>
+                className="submitpack" 
+                style={{ 
+                display: 'block', 
+                margin: '20px auto 50px auto',  // Center horizontally and add bottom margin
+                width: '240px' 
+                  }}
+                onClick={() => navigate('/start')} // Adjust the path as needed
+            >
+                Proceed
+             </button>
+
             <div>
                 <PackagingMaterials />
             </div>

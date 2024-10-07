@@ -39,13 +39,7 @@ export default function Chatbot() {
     };
     return (
         <div>
-            {/* Arrow Icon for going back */}
-            <div className="back-arrow">
-            <a href="http://localhost:3000/" target="_blank" rel="noopener noreferrer">
-            <img src="https://www.svgrepo.com/show/305142/arrow-ios-back.svg"/>
-            </a>
-            </div>
-
+            
             <div className="image-container">
                  <img
                      src="https://media.istockphoto.com/id/1081316088/de/vektor/flache-vektor-icon-von-m%C3%A4dchen-mit-kopfh%C3%B6rern-f%C3%BCr-online-support.jpg?s=612x612&w=0&k=20&c=QlSrnvqg3MgaU6J6MdrvedMSy3CmMRXZYLmGL9mEUn8="
